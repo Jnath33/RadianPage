@@ -35,7 +35,7 @@
 </head>
 <body>
     <div id="header">This is the header element</div>
-    <svg viewBox="0 0 200 200">
+    <svg id="my-svg" viewBox="0 0 200 200">
         <!-- x-axis -->
         <line x1="0" y1="100" x2="200" y2="100" stroke="#B6EADA" />
         <!-- y-axis -->
@@ -46,12 +46,20 @@
         <circle id="point" cx="150" cy="100" r="4" stroke="transparent" fill="#301E67"/>
     </svg>
     <script>
+        const svg = document.getElementById('my-svg');
+
         function replacePi(event) {
             // Get the input field element
             const input = event.target;
             // Get the input field value
             const value = input.value;
-            
+            if ((event.keyCode === 13 || event.key === 'Enter')) {
+                input.value = ""
+                
+                newPoint()
+
+                event.preventDefault();
+            }
 
             // Check if the "p" and "i" characters are typed
             if (event.key === "i" && value.endsWith("p")) {
@@ -104,6 +112,15 @@
         function movePoint(angle){
             point.setAttribute("cx", (100+50*Math.cos(angle)).toString())
             point.setAttribute("cy", (100-50*Math.sin(angle)).toString())
+        }
+
+        function newPoint() {
+            np = point.cloneNode()
+            np.setAttribute("fill", "#00ff00")
+
+            svg.appendChild(np)
+
+            movePoint(0)
         }
     </script>
     <input type="text" onkeydown="replacePi(event)" id="myInput" />
