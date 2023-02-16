@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+    body {
+        background-color: #03001C;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      #header {
+        margin: 20px;
+      }
+      svg {
+        width: min(50%, 600px);
+        height: auto;
+      }
+      input {
+        box-shadow: 0 6px 6px rgba(113, 5, 255, 0.808);
+        border-radius: 5px;
+        background-color: #2f0341;
+        color:aliceblue;
+        font-size: large;
+    }
+    input:focus {
+  outline: none;
+  box-shadow: 0 6px 6px rgba(0, 156, 156, 0.712);
+  border-color: #4a90e2;
+}
+    </style>
+</head>
+<body>
+    <div id="header">This is the header element</div>
+    <svg viewBox="0 0 200 200">
+        <!-- x-axis -->
+        <line x1="0" y1="100" x2="200" y2="100" stroke="#B6EADA" />
+        <!-- y-axis -->
+        <line x1="100" y1="0" x2="100" y2="200" stroke="#B6EADA" />
+        <!-- circle -->
+        <circle cx="100" cy="100" r="50" stroke="#B6EADA" fill="transparent" />
+        <!-- point -->
+        <circle id="point" cx="150" cy="100" r="4" stroke="transparent" fill="#301E67"/>
+    </svg>
+    <script>
+        function replacePi(event) {
+            // Get the input field element
+            const input = event.target;
+            // Get the input field value
+            const value = input.value;
+            
+
+            // Check if the "p" and "i" characters are typed
+            if (event.key === "i" && value.endsWith("p")) {
+                // Replace the "pi" characters with the π symbol
+                input.value = value.slice(0, -1) + "π";
+
+
+                movePoint(getQuotient(input.value))
+
+
+                // Prevent the default keypress behavior
+                event.preventDefault();
+            }
+        }
+
+
+        function getQuotient(str) {
+            // Extract the numbers from the string
+            ss = str.split("/")
+            const numerator = ss[0]
+            const denominator = ss.length === 2 ? ss[1]: "1"
+
+
+            r = new RegExp("π", "g")
+            n1 = numerator.replace(r, "")
+            n2 = denominator.replace(r, "")
+
+
+            // Parse the numerator and denominator
+            num1 = parseFloat(n1) || (ss[0].includes("π") ? 1: 0); // If numerator is not a number, set it to 1
+            num2 = parseFloat(n2) || 1; // If denominator is not a number, set it to 1
+
+            // Replace any occurrence of "pi" with the numerical value
+            const pi = Math.PI;
+            if (numerator.includes("π")) {
+                num1 = num1*pi;
+            }
+            if (denominator.includes("π")) {
+                num2 = num2*pi;
+            }
+
+            // Calculate the quotient of the two numbers
+            const quotient = num2 === 0 ? num1 : num1 / num2;
+
+            return quotient;
+        }
+
+        const point = document.getElementById('point');
+
+        function movePoint(angle){
+            point.setAttribute("cx", (100+50*Math.cos(angle)).toString())
+            point.setAttribute("cy", (100-50*Math.sin(angle)).toString())
+        }
+    </script>
+    <input type="text" onkeydown="replacePi(event)" id="myInput" />
+    <script>
+        const inputField = document.getElementById("myInput");
+
+        inputField.addEventListener("input", (event) => {
+        const newValue = event.target.value;
+        movePoint(getQuotient(newValue))
+        console.log(getQuotient(newValue));
+        });
+    </script>
+</body>
+</html>
